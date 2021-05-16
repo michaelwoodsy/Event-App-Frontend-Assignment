@@ -27,7 +27,9 @@ export const Events = {
         fee
     }),
 
-    getEvents: (searchTerm) => instance.get('events', {params: {'q': searchTerm}}),
+    getEvents: () => instance.get('events', {}),
+
+    searchEvents: (searchTerm) => instance.get('events', {params: {'q': searchTerm}}),
 
     getEventData: (id) => instance.get(`events/${id}`, {}),
 
@@ -45,9 +47,15 @@ export const Users = {
         password
     }),
 
-    login: (username, password) => instance.post('users/login', {username, password}),
+    login: (email, password) => instance.post('users/login', {email, password}),
 
     logout: () => instance.post('users/logout', {}),
 
     getUserData: (id) => instance.get(`users/${id}`, {}),
 };
+
+export const UsersImages = {
+    setUserImage: (id) => instance.put(`users/${id}/image`, {}),
+
+    getUserImage: (id) => instance.get(`users/${id}/image`, {}),
+}

@@ -18,6 +18,15 @@
       <el-row>
         <el-col :span="10"><div class="grid-content"></div></el-col>
         <el-col :span="4"><div class="grid-content"></div>
+          <label><b>Profile Picture: </b>(Optional)</label>
+          <input type="file" @change="onFileSelected">
+        </el-col>
+        <el-col :span="10"><div class="grid-content"></div></el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="10"><div class="grid-content"></div></el-col>
+        <el-col :span="4"><div class="grid-content"></div>
           <label><b>First Name:</b></label>
           <el-input v-model="firstName" placeholder="Enter your First Name" type="text"></el-input>
           <span class="error">{{ errorMsg.firstName }}</span>
@@ -55,18 +64,18 @@
         <el-col :span="10"><div class="grid-content"></div></el-col>
       </el-row>
 
-      <el-row>
+      <el-row id="errors" hidden>
         <el-col :span="10"><div class="grid-content"></div></el-col>
         <el-col :span="4"><div class="grid-content"></div>
-          <el-button type="primary" v-on:click="register">Create Account</el-button>
+          <span class="error">{{ errorMsg.backendChecks }}</span>
         </el-col>
         <el-col :span="10"><div class="grid-content"></div></el-col>
       </el-row>
 
       <el-row>
-        <el-col :span="10"><div class="grid-content bg-purple"></div></el-col>
-        <el-col :span="4"><div class="grid-content bg-purple"></div>
-          <span class="error">{{ errorMsg.backendChecks }}</span>
+        <el-col :span="10"><div class="grid-content"></div></el-col>
+        <el-col :span="4"><div class="grid-content"></div>
+          <el-button type="primary" v-on:click="register">Create Account</el-button>
         </el-col>
         <el-col :span="10"><div class="grid-content"></div></el-col>
       </el-row>
@@ -82,6 +91,7 @@ export default {
 
   data() {
     return {
+      selectedFile: null,
       firstName: '',
       lastName: '',
       email: '',
@@ -98,6 +108,10 @@ export default {
   },
 
   methods: {
+    onFileSelected(event) {
+      this.selectedFile = event.target.files[0];
+    },
+
     checkFirstName() {
       if (this.firstName === '') {
         this.errorMsg['firstName'] = 'Please enter a first name'
@@ -141,6 +155,7 @@ export default {
     },
 
     register() {
+      document.getElementById("errors").hidden = true;
       this.checkFirstName()
       this.checkLastName()
       this.checkEmail()
@@ -155,6 +170,7 @@ export default {
             })
             .catch((error) => {
               this.errorMsg.backendChecks = error.response.statusText.slice(error.response.statusText.indexOf(":") + 2)
+              document.getElementById("errors").hidden = false;
             })
       }
     }

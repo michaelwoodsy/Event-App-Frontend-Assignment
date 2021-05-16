@@ -5,6 +5,11 @@ import Events from "./components/Events";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import ElementPlus from 'element-plus';
+import CreateEvent from "./components/CreateEvent";
+import EditEvent from "./components/EditEvent";
+import ProfilePage from "./components/ProfilePage";
+import EditProfile from "./components/EditProfile";
+import EventDetails from "./components/EventDetails";
 
 const routes = [
     {
@@ -21,6 +26,36 @@ const routes = [
         path:"/register",
         name: "register",
         component: Register
+    },
+    {
+        path: "/events",
+        name: "events",
+        component: Events
+    },
+    {
+        path:"/events/:id",
+        name: "eventDetails",
+        component: EventDetails
+    },
+    {
+        path: "/events/create",
+        name: "createEvent",
+        component: CreateEvent
+    },
+    {
+        path:"/events/edit",
+        name: "editEvent",
+        component: EditEvent
+    },
+    {
+        path: "/users/:id",
+        name: "profilePage",
+        component: ProfilePage
+    },
+    {
+        path: "/users/:id/edit",
+        name: "editProfile",
+        component: EditProfile
     }
 ];
 
