@@ -4,7 +4,11 @@ const instance = axios.create({
     baseURL: 'http://localhost:4941/api/v1',
 });
 
-export const Events = {
+export function setAuthorizationHeader(token){
+    instance.defaults.headers.common['X-Authorization'] = token;
+}
+
+export const Event = {
     createNew: (title,
                 description,
                 categoryIds,
@@ -36,7 +40,7 @@ export const Events = {
     deleteEvent: (id) => instance.delete(`events/${id}`, {}),
 };
 
-export const Users = {
+export const User = {
     createNew: (firstName,
                 lastName,
                 email,
@@ -54,7 +58,7 @@ export const Users = {
     getUserData: (id) => instance.get(`users/${id}`, {}),
 };
 
-export const UsersImages = {
+export const UserImage = {
     setUserImage: (id) => instance.put(`users/${id}/image`, {}),
 
     getUserImage: (id) => instance.get(`users/${id}/image`, {}),

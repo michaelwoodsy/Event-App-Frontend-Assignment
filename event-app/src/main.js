@@ -10,12 +10,13 @@ import EditEvent from "./components/EditEvent";
 import ProfilePage from "./components/ProfilePage";
 import EditProfile from "./components/EditProfile";
 import EventDetails from "./components/EventDetails";
+import Home from "./components/Home";
 
 const routes = [
     {
         path: "/",
-        name: "events",
-        component: Events
+        name: "home",
+        component: Home
     },
     {
         path: "/login",
@@ -43,7 +44,7 @@ const routes = [
         component: CreateEvent
     },
     {
-        path:"/events/edit",
+        path:"/events/:id/edit",
         name: "editEvent",
         component: EditEvent
     },

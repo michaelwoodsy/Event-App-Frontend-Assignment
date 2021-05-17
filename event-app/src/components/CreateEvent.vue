@@ -1,117 +1,118 @@
 <template>
-  <el-container>
-    <el-header>
-
-    </el-header>
-
-    <el-divider></el-divider>
-
-    <el-main>
-      <el-row>
-        <el-col :span="9">
-          <div class="grid-content"></div>
-        </el-col>
-        <el-col :span="6">
-          <div class="grid-content"></div>
-          <el-form>
-            <el-form-item>
-              <h1>Create Event:</h1>
-            </el-form-item>
-            <el-form-item>
-              <label><b>Title:</b></label>
-              <el-input placeholder="Please input event name" v-model="title" type="text"></el-input>
-              <span class="error">{{ errorMsg.title }}</span>
-            </el-form-item>
-            <el-form-item>
-              <label style="margin-right: 10px"><b>Categories:</b></label>
-              <el-select v-model="selectedCategories" multiple placeholder="Select">
-                <el-option
-                    v-for="category in categories"
-                    :key="category.categoryId"
-                    :label="category.name"
-                    :value="category.categoryId">
-                </el-option>
-              </el-select>
-              <br>
-              <span class="error">{{ errorMsg.selectedCategories }}</span>
-            </el-form-item>
-            <el-form-item>
-              <label style="margin-right: 10px"><b>Date:</b></label>
-              <el-date-picker
-                  v-model="date"
-                  type="datetime"
-                  placeholder="Select date and time">
-              </el-date-picker>
-              <br>
-              <span class="error">{{ errorMsg.date }}</span>
-            </el-form-item>
-            <el-form-item>
-              <label style="margin-right: 10px"><b>Image:</b></label>
-              <input type="file" @change="onFileSelected">
-              <br>
-              <span class="error">{{ errorMsg.selectedFile }}</span>
-            </el-form-item>
-            <el-form-item>
-              <label><b>Description:</b></label>
-              <el-input
-                  type="textarea"
-                  :autosize="{ minRows: 2, maxRows: 4}"
-                  placeholder="Provide an Event Description"
-                  v-model="description">
-              </el-input>
-              <span class="error">{{ errorMsg.description }}</span>
-            </el-form-item>
-            <el-form-item>
-              <label><b>Maximum Capacity:</b></label>
-              <el-input placeholder="Please input maximum capacity" v-model="maxCapacity" type="text"></el-input>
-              <span class="error">{{ errorMsg.maxCapacity }}</span>
-            </el-form-item>
-            <el-form-item>
-              <label style="margin-right: 10px"><b>Online or In-Person:</b></label>
-              <el-radio v-model="isOnline" label=true>Online</el-radio>
-              <el-radio v-model="isOnline" label=false>In-Person</el-radio>
-              <span class="error">{{ errorMsg.isOnline }}</span>
-            </el-form-item>
-            <el-form-item>
-              <label><b>URL:</b></label>
-              <el-input placeholder="Please input event URL" v-model="eventUrl">
-                <template #prepend>https://</template>
-              </el-input>
-              <span class="error">{{ errorMsg.eventUrl }}</span>
-            </el-form-item>
-            <el-form-item>
-              <label><b>Venue:</b></label>
-              <el-input placeholder="Please input event venue" v-model="venue" type="text"></el-input>
-              <span class="error">{{ errorMsg.venue }}</span>
-            </el-form-item>
-            <el-form-item>
-              <label style="margin-right: 10px"><b>Requires Attendance Control:</b></label>
-              <el-radio v-model="controlAttendanceStatus" label=true>Yes</el-radio>
-              <el-radio v-model="controlAttendanceStatus" label=false>No</el-radio>
-              <span class="error">{{ errorMsg.controlAttendanceStatus }}</span>
-            </el-form-item>
-            <el-form-item>
-              <label><b>Fee:</b></label>
-              <el-input placeholder="Please input event fee" v-model="fee">
-                <template #prepend>$</template>
-              </el-input>
-              <span class="error">{{ errorMsg.fee }}</span>
-            </el-form-item>
-            <el-form-item>
-              <span class="error" id="backendError" hidden>{{ errorMsg.backendChecks }}</span>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" v-on:click="createEvent">Create Event</el-button>
-              <el-button v-on:click="cancel">Cancel</el-button>
-            </el-form-item>
-          </el-form>
-        </el-col>
-        <el-col :span="9">
-          <div class="grid-content"></div>
-        </el-col>
-      </el-row>
-    </el-main>
-  </el-container>
+  <el-row>
+    <el-col :span="9">
+      <div class="grid-content"></div>
+    </el-col>
+    <el-col :span="6">
+      <div class="grid-content"></div>
+      <el-form>
+        <el-form-item>
+          <h1>Create Event:</h1>
+        </el-form-item>
+        <el-form-item>
+          <label><b>Title:</b></label>
+          <el-input placeholder="Please input event name" v-model="title" type="text"></el-input>
+          <span class="error">{{ errorMsg.title }}</span>
+        </el-form-item>
+        <el-form-item>
+          <label style="margin-right: 10px"><b>Categories:</b></label>
+          <el-select v-model="selectedCategories" multiple placeholder="Select">
+            <el-option
+                v-for="category in categories"
+                :key="category.categoryId"
+                :label="category.name"
+                :value="category.categoryId">
+            </el-option>
+          </el-select>
+          <br>
+          <span class="error">{{ errorMsg.selectedCategories }}</span>
+        </el-form-item>
+        <el-form-item>
+          <label style="margin-right: 10px"><b>Date:</b></label>
+          <el-date-picker
+              v-model="date"
+              type="datetime"
+              placeholder="Select date and time">
+          </el-date-picker>
+          <br>
+          <span class="error">{{ errorMsg.date }}</span>
+        </el-form-item>
+        <el-form-item>
+          <label style="margin-right: 10px"><b>Image:</b></label>
+          <input type="file" @change="onFileSelected">
+          <br>
+          <span class="error">{{ errorMsg.selectedFile }}</span>
+        </el-form-item>
+        <el-form-item>
+          <label><b>Description:</b></label>
+          <el-input
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 4}"
+              placeholder="Provide an Event Description"
+              v-model="description">
+          </el-input>
+          <span class="error">{{ errorMsg.description }}</span>
+        </el-form-item>
+        <el-form-item>
+          <label style="margin-right: 10px"><b>Maximum Capacity:</b></label>
+          <el-input id="capacityInput" v-model="maxCapacity" :min="1" type="number"></el-input>
+          <el-checkbox v-model="checkedCapacity" @change="maxCapacityChange">Non-Applicable</el-checkbox>
+          <br>
+          <span class="error">{{ errorMsg.maxCapacity }}</span>
+        </el-form-item>
+        <el-form-item>
+          <label style="margin-right: 10px"><b>Online or In-Person:</b></label>
+          <el-switch
+              v-model="isOnline"
+              active-text="Online"
+              inactive-text="In-Person"
+              @change="venueUrlChange"
+          >
+          </el-switch>
+          <br>
+          <span>Online requires a URL, In-Person requires a venue</span>
+          <span class="error">{{ errorMsg.isOnline }}</span>
+        </el-form-item>
+        <el-form-item>
+          <label><b>URL:</b></label>
+          <el-input id="urlInput" placeholder="Please input event URL" v-model="eventUrl" type="url">
+            <template #prepend>https://</template>
+          </el-input>
+          <span class="error">{{ errorMsg.eventUrl }}</span>
+        </el-form-item>
+        <el-form-item>
+          <label><b>Venue:</b></label>
+          <el-input id="venueInput" placeholder="Please input event venue" v-model="venue" type="text"></el-input>
+          <span class="error">{{ errorMsg.venue }}</span>
+        </el-form-item>
+        <el-form-item>
+          <label style="margin-right: 10px"><b>Requires Attendance Control:</b></label>
+          <el-radio v-model="controlAttendanceStatus" label=true>Yes</el-radio>
+          <el-radio v-model="controlAttendanceStatus" label=false>No</el-radio>
+          <span class="error">{{ errorMsg.controlAttendanceStatus }}</span>
+        </el-form-item>
+        <el-form-item>
+          <label><b>Fee:</b></label>
+          <el-input id="feeInput" placeholder="Please input event fee" v-model="fee" :min="0" type="number">
+            <template #prepend>$</template>
+          </el-input>
+          <el-checkbox v-model="checkedFee" @change="feeChange">Non-Applicable</el-checkbox>
+          <br>
+          <span class="error">{{ errorMsg.fee }}</span>
+        </el-form-item>
+        <el-form-item>
+          <span class="error" id="backendError" hidden>{{ errorMsg.backendChecks }}</span>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" v-on:click="createEvent">Create Event</el-button>
+          <el-button v-on:click="cancel">Cancel</el-button>
+        </el-form-item>
+      </el-form>
+    </el-col>
+    <el-col :span="9">
+      <div class="grid-content"></div>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -122,6 +123,8 @@ export default {
   data() {
     return {
       selectedFile: null,
+      checkedFee: false,
+      checkedCapacity: false,
       title: '',
       selectedCategories: [],
       categories: [{
@@ -143,9 +146,9 @@ export default {
       date: '',
       description: '',
       maxCapacity: '',
-      isOnline: '',
+      isOnline: true,
       eventUrl: '',
-      venue: '',
+      venue: null,
       controlAttendanceStatus: '',
       fee: '',
       errorMsg: {
@@ -166,6 +169,10 @@ export default {
     }
   },
 
+  mounted() {
+    document.getElementById("venueInput").disabled = true;
+  },
+
   methods: {
     onFileSelected(event) {
       this.selectedFile = event.target.files[0];
@@ -173,6 +180,40 @@ export default {
 
     cancel() {
       this.$router.push({name: "events"})
+    },
+
+    feeChange() {
+      if (this.checkedFee === true) {
+        this.fee = null;
+        document.getElementById("feeInput").disabled = true;
+      } else {
+        document.getElementById("feeInput").disabled = false;
+        this.fee = '';
+      }
+    },
+
+    maxCapacityChange() {
+      if (this.checkedCapacity === true) {
+        this.maxCapacity = null;
+        document.getElementById("capacityInput").disabled = true;
+      } else {
+        document.getElementById("capacityInput").disabled = false;
+        this.maxCapacity = '';
+      }
+    },
+
+    venueUrlChange() {
+      if (this.isOnline === true) {
+        document.getElementById("venueInput").disabled = true;
+        document.getElementById("urlInput").disabled = false;
+        this.venue = null;
+        this.eventUrl = '';
+      } else {
+        document.getElementById("venueInput").disabled = false;
+        document.getElementById("urlInput").disabled = true;
+        this.eventUrl = null;
+        this.venue = '';
+      }
     },
 
     checkTitle() {

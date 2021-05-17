@@ -1,51 +1,41 @@
 <template>
-  <el-container>
-    <el-header>
-
-    </el-header>
-
-    <el-divider></el-divider>
-
-    <el-main>
-      <el-row>
-        <el-col :span="9">
-          <div class="grid-content"></div>
-        </el-col>
-        <el-col :span="6">
-          <div class="grid-content"></div>
-          <el-form>
-            <el-form-item>
-              <h1>Login:</h1>
-            </el-form-item>
-            <el-form-item>
-              <label><b>Email:</b></label>
-              <el-input v-model="email" placeholder="Enter your Email" type="email"></el-input>
-              <span class="error">{{ errorMsg.email }}</span>
-            </el-form-item>
-            <el-form-item>
-              <label><b>Password:</b></label>
-              <el-input v-model="password" placeholder="Enter your Password" type="password"></el-input>
-              <span class="error">{{ errorMsg.password }}</span>
-            </el-form-item>
-            <el-form-item>
-              <span class="error" id="backendError" hidden>{{ errorMsg.backendChecks }}</span>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" v-on:click="login">Login</el-button>
-              <el-button v-on:click="cancel">Cancel</el-button>
-            </el-form-item>
-          </el-form>
-        </el-col>
-        <el-col :span="9">
-          <div class="grid-content"></div>
-        </el-col>
-      </el-row>
-    </el-main>
-  </el-container>
+  <el-row>
+    <el-col :span="9">
+      <div class="grid-content"></div>
+    </el-col>
+    <el-col :span="6">
+      <div class="grid-content"></div>
+      <el-form>
+        <el-form-item>
+          <h1>Login:</h1>
+        </el-form-item>
+        <el-form-item>
+          <label><b>Email:</b></label>
+          <el-input v-model="email" placeholder="Enter your Email" type="email"></el-input>
+          <span class="error">{{ errorMsg.email }}</span>
+        </el-form-item>
+        <el-form-item>
+          <label><b>Password:</b></label>
+          <el-input v-model="password" placeholder="Enter your Password" type="password"></el-input>
+          <span class="error">{{ errorMsg.password }}</span>
+        </el-form-item>
+        <el-form-item>
+          <span class="error" id="backendError" hidden>{{ errorMsg.backendChecks }}</span>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" v-on:click="login">Login</el-button>
+          <el-button v-on:click="cancel">Cancel</el-button>
+        </el-form-item>
+      </el-form>
+    </el-col>
+    <el-col :span="9">
+      <div class="grid-content"></div>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
-import {Users} from "../Api";
+import {User} from "../Api";
 
 export default {
   name: "Login",
@@ -95,7 +85,7 @@ export default {
       if (!this.check) {
         this.check = true
       } else {
-        Users.login(this.email, this.password)
+        User.login(this.email, this.password)
             .then(() => {
               this.$router.push({name: "events"})
             })
