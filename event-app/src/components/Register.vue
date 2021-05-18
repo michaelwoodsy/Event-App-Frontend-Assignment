@@ -156,10 +156,16 @@ export default {
       } else {
         User.createNew(this.firstName, this.lastName, this.email, this.password)
             .then(() => {
-              this.$router.push({name: "events"})
+              User.login(this.email, this.password)
+                  .then((response) => {
+                    this.$store.commit("updateToken", response.data.token)
+                    this.$store.commit("updateUser", response.data.userId)
+                    this.$router.push({name: "events"})
+                  })
             })
             .catch((error) => {
-              this.errorMsg.backendChecks = error.response.statusText.slice(error.response.statusText.indexOf(":") + 2)
+              let errorString = error.response.statusText.slice(error.response.statusText.indexOf(":") + 2)
+              this.errorMsg.backendChecks = errorString.charAt(0).toUpperCase() + errorString.slice(1)
               document.getElementById("backendError").hidden = false;
             })
       }

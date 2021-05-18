@@ -4,10 +4,6 @@ const instance = axios.create({
     baseURL: 'http://localhost:4941/api/v1',
 });
 
-export function setAuthorizationHeader(token){
-    instance.defaults.headers.common['X-Authorization'] = token;
-}
-
 export const Event = {
     createNew: (title,
                 description,
@@ -56,6 +52,8 @@ export const User = {
     logout: () => instance.post('users/logout', {}),
 
     getUserData: (id) => instance.get(`users/${id}`, {}),
+
+    setAuthorizationHeader: (token) => instance.defaults.headers.common['X-Authorization'] = token
 };
 
 export const UserImage = {

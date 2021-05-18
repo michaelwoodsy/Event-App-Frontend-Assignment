@@ -29,24 +29,7 @@
       <div class="grid-content"></div>
       <el-button type="primary" icon="el-icon-search" @click="searchEvents">Search</el-button>
     </el-col>
-    <el-col :span="3">
-      <div class="grid-content"></div>
-      <el-button type="primary" @click="filterVisible = true">Filter Events</el-button>
-      <el-dialog
-          title="Filter Categories"
-          v-model="filterVisible"
-          width="30%"
-          :before-close="handleClose">
-        <span>TO BE IMPLEMENTED</span>
-        <template #footer>
-    <span class="dialog-footer">
-      <el-button @click="filterVisible = false">Cancel</el-button>
-      <el-button type="primary" @click="filterVisible = false">Confirm</el-button>
-    </span>
-        </template>
-      </el-dialog>
-    </el-col>
-    <el-col :span="4">
+    <el-col :span="7">
       <div class="grid-content"></div>
     </el-col>
   </el-row>
@@ -61,28 +44,25 @@
           v-loading="loading"
           :data="pagedTableData"
           :default-sort="{prop: 'date', order: 'descending'}"
+          row-click=""
           border
           style="width: 100%">
         <el-table-column
             prop="date"
             label="Date"
-            sortable
-            width="180">
+            sortable>
         </el-table-column>
         <el-table-column
             prop="title"
-            label="Title"
-            width="180">
+            label="Title">
         </el-table-column>
         <el-table-column
             prop="categories"
-            label="Categories"
-            width="180">
+            label="Categories">
         </el-table-column>
         <el-table-column
             prop="organizerFirstName"
-            label="Organiser"
-            width="180">
+            label="Organiser">
         </el-table-column>
         <el-table-column
             prop="numAcceptedAttendees"
@@ -127,16 +107,18 @@ export default {
     return {
       searchValue: "",
       events: [],
+      tableEvents: [],
+      categories: [],
       pageNum: 1,
       pageSize: 10,
       error: null,
       loading: true,
-      filterVisible: false
     }
   },
 
   mounted() {
     this.loadEvents();
+    this.setTableEvents();
   },
 
   computed: {
@@ -146,15 +128,6 @@ export default {
   },
 
   methods: {
-    handleClose(done) {
-      this.$confirm('Are you sure to close this dialog?')
-          .then(() => {
-            done();
-            this.filterVisible = false
-          })
-          .catch(() => {
-          });
-    },
 
     setPage(val) {
       this.pageNum = val;
@@ -171,6 +144,28 @@ export default {
           .catch((error) => {
             this.error = error
           })
+    },
+
+    setTableEvents() {
+      for (let i = 0; i < this.events.length; i++) {
+        let image = "https://www.nccer.org/images/default-source/Thumbnails/default-thumbnails/default-event-thumb.jpg"
+        let date = this.events[i].date
+        let title = this.events[i].title
+        let categories = this.events[i].categories
+        let organizerName = this.events[i].organizerFirstName + " " + this.events[i].organizerLastName
+        let organizerImage = "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
+        let attendees = this.events[i].numAcceptedAttendees
+        let tableEvent = {
+          image: image,
+          date: date,
+          title: title,
+          categories: categories,
+          organizerName: organizerName,
+          organizerImage: organizerImage,
+          attendees: attendees
+        }
+        this.tableEvents.push(tableEvent)
+      }
     },
 
     createEvent() {

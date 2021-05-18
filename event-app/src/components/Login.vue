@@ -86,11 +86,13 @@ export default {
         this.check = true
       } else {
         User.login(this.email, this.password)
-            .then(() => {
+            .then((response) => {
+              this.$store.dispatch("login", response.data.token, response.data.userId)
               this.$router.push({name: "events"})
             })
             .catch((error) => {
-              this.errorMsg.backendChecks = error.response.statusText.slice(error.response.statusText.indexOf(":") + 2)
+              let errorString = error.response.statusText.slice(error.response.statusText.indexOf(":") + 2)
+              this.errorMsg.backendChecks = errorString.charAt(0).toUpperCase() + errorString.slice(1)
               document.getElementById("backendError").hidden = false;
             })
       }

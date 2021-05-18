@@ -11,6 +11,7 @@ import ProfilePage from "./components/ProfilePage";
 import EditProfile from "./components/EditProfile";
 import EventDetails from "./components/EventDetails";
 import Home from "./components/Home";
+import { store } from "./store"
 
 const routes = [
     {
@@ -68,4 +69,5 @@ const router = createRouter({
 const app = createApp(App);
 app.use(router);
 app.use(ElementPlus);
+app.use(store);
 app.mount('#app');
