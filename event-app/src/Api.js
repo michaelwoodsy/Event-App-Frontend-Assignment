@@ -53,11 +53,15 @@ export const User = {
 
     getUserData: (id) => instance.get(`users/${id}`, {}),
 
+    editUserData: (id, userData) => instance.patch(`users/${id}`, userData),
+
     setAuthorizationHeader: (token) => instance.defaults.headers.common['X-Authorization'] = token
 };
 
 export const UserImage = {
-    setUserImage: (id) => instance.put(`users/${id}/image`, {}),
+    setUserImage: (id, file, type) => instance.put(`users/${id}/image`, file, {headers: {'Content-Type': `${type}`}}),
 
-    getUserImage: (id) => instance.get(`users/${id}/image`, {}),
+    getUserImage: (id) => instance.get(`users/${id}/image`, {responseType: 'arraybuffer'}),
+
+    deleteUserImage: (id) => instance.delete(`users/${id}/image`, {}),
 }

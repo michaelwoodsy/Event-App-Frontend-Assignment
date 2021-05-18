@@ -33,6 +33,7 @@
       <div class="grid-content"></div>
     </el-col>
   </el-row>
+  <br>
 
   <el-row>
     <el-col :span="4">
@@ -41,7 +42,6 @@
     <el-col :span="16">
       <div class="grid-content"></div>
       <el-table
-          v-loading="loading"
           :data="pagedTableData"
           :default-sort="{prop: 'date', order: 'descending'}"
           row-click=""
@@ -112,13 +112,11 @@ export default {
       pageNum: 1,
       pageSize: 10,
       error: null,
-      loading: true,
     }
   },
 
   mounted() {
     this.loadEvents();
-    this.setTableEvents();
   },
 
   computed: {
@@ -139,33 +137,10 @@ export default {
           .then((response) => {
             this.error = null
             this.events = response.data
-            this.loading = false
           })
           .catch((error) => {
-            this.error = error
+            console.log(error.response.statusText)
           })
-    },
-
-    setTableEvents() {
-      for (let i = 0; i < this.events.length; i++) {
-        let image = "https://www.nccer.org/images/default-source/Thumbnails/default-thumbnails/default-event-thumb.jpg"
-        let date = this.events[i].date
-        let title = this.events[i].title
-        let categories = this.events[i].categories
-        let organizerName = this.events[i].organizerFirstName + " " + this.events[i].organizerLastName
-        let organizerImage = "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
-        let attendees = this.events[i].numAcceptedAttendees
-        let tableEvent = {
-          image: image,
-          date: date,
-          title: title,
-          categories: categories,
-          organizerName: organizerName,
-          organizerImage: organizerImage,
-          attendees: attendees
-        }
-        this.tableEvents.push(tableEvent)
-      }
     },
 
     createEvent() {
@@ -174,26 +149,23 @@ export default {
 
     searchEvents() {
       this.events = []
-      this.loading = true
       if (this.searchValue === "") {
         Event.getEvents()
             .then((response) => {
               this.error = null
               this.events = response.data
-              this.loading = false
             })
             .catch((error) => {
-              this.error = error
+              console.log(error.response.statusText)
             })
       } else {
         Event.searchEvents(this.searchValue)
             .then((response) => {
               this.error = null
               this.events = response.data
-              this.loading = false
             })
             .catch((error) => {
-              this.error = error
+              console.log(error.response.statusText)
             })
       }
     }
@@ -203,17 +175,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.el-row {
-  margin-bottom: 10px;
-}
-
-.el-col {
-  border-radius: 4px;
-}
-
-.grid-content {
-  border-radius: 4px;
-  min-height: 36px;
-}
 
 </style>

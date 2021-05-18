@@ -12,6 +12,7 @@
     "bootstrap": "^5.0.1",
     "core-js": "^3.6.5",
     "element-plus": "^1.0.2-beta.44",
+    "node": "^16.1.0",
     "vue": "^3.0.11",
     "vue-router": "^4.0.8",
     "vuex": "^4.0.0",

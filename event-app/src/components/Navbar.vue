@@ -1,7 +1,8 @@
 <template>
   <el-menu :router="true" class="el-menu-demo" mode="horizontal">
     <el-menu-item index="1" :route="{name:'events'}">Events</el-menu-item>
-    <el-menu-item index="2" v-if="isLoggedIn" :route="{path: `users/${profileRoute}`}">Profile</el-menu-item>
+    <el-menu-item index="2" v-if="isLoggedIn" :route="{name: 'profilePage', params: { id: profileRoute }}">Profile
+    </el-menu-item>
     <el-menu-item index="3" v-if="!isLoggedIn" :route="{name:'login'}">Login</el-menu-item>
     <el-menu-item index="4" v-if="!isLoggedIn" :route="{name:'register'}">Register</el-menu-item>
     <el-menu-item index="5" v-if="isLoggedIn" @click="logout" :route="{name:'home'}">Logout</el-menu-item>
@@ -14,6 +15,10 @@ import {User} from "../Api";
 
 export default {
   name: "Navbar",
+
+  mounted() {
+    User.setAuthorizationHeader(this.$store.state.authToken)
+  },
 
   computed: {
     isLoggedIn() {
@@ -30,9 +35,12 @@ export default {
   },
 
   methods: {
-    logout () {
+    logout() {
       User.logout()
           .then(() => {
+            this.$store.dispatch("logout")
+          })
+          .catch(() => {
             this.$store.dispatch("logout")
           })
     }

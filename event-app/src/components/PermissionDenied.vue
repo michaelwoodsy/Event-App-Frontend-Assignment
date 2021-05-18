@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: "PermissionDenied"
+  name: "PermissionDenied",
 }
 </script>
 

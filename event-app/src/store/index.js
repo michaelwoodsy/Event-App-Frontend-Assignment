@@ -1,6 +1,6 @@
-import { createStore } from 'vuex'
+import {createStore} from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
-import { User } from "../Api"
+import {User} from "../Api"
 
 export const store = createStore({
     plugins: [createPersistedState({
@@ -12,13 +12,13 @@ export const store = createStore({
         userId: null,
     },
 
-    getters:{
+    getters: {
         isLoggedIn(state) {
             return state.authToken.length > 0
         }
     },
 
-    mutations:{
+    mutations: {
         updateToken(state, newToken) {
             state.authToken = newToken;
             User.setAuthorizationHeader(newToken)
@@ -29,13 +29,12 @@ export const store = createStore({
         }
     },
 
-    actions:{
-        login({ commit }, newToken, userId) {
+    actions: {
+        login({commit}, newToken) {
             commit('updateToken', newToken)
-            commit('updateUser', userId)
         },
 
-        logout({ commit }) {
+        logout({commit}) {
             commit('updateToken', "")
             commit('updateUser', null)
         },
