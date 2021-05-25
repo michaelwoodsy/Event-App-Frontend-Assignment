@@ -1,71 +1,87 @@
 <template>
-  <permission-denied v-if="!hasPermission"></permission-denied>
-  <div v-else>
-    <el-row>
-      <el-col :span="9">
-        <div class="grid-content"></div>
-      </el-col>
-      <el-col :span="6">
-        <div class="grid-content"></div>
-        <el-form>
-          <el-form-item>
-            <h1>Edit Profile:</h1>
-          </el-form-item>
-          <el-form-item>
-            <p style="text-align:center;"><img v-if="defaultNeeded" src="../assets/defaultProfile.jpg"
-                                               style="width: 200px; height: 200px" fit="contain"/></p>
-            <p style="text-align:center;"><img v-if="!defaultNeeded" :src="profilePictureDisplay"
-                                               style="width: 200px; height: 200px" fit="contain"/></p>
-            <el-button type="danger" style="text-align: center" v-if="!defaultNeeded" v-on:click="deleteImage">Delete
-              Image
-            </el-button>
-          </el-form-item>
-          <el-form-item>
-            <label><b>First Name:</b></label>
-            <el-input v-model="firstName" placeholder="Enter your new First Name" type="text"></el-input>
-            <span class="error">{{ errorMsg.firstName }}</span>
-          </el-form-item>
-          <el-form-item>
-            <label><b>Last Name:</b></label>
-            <el-input v-model="lastName" placeholder="Enter your new Last Name" type="text"></el-input>
-            <span class="error">{{ errorMsg.lastName }}</span>
-          </el-form-item>
-          <el-form-item>
-            <label><b>Email:</b></label>
-            <el-input v-model="email" placeholder="Enter your new Email" type="email"></el-input>
-            <span class="error">{{ errorMsg.email }}</span>
-          </el-form-item>
-          <el-form-item>
-            <label><b>Current Password:</b></label>
-            <el-input v-model="currentPassword" placeholder="Enter your current Password" type="password"
-                      show-password></el-input>
-            <span class="error">{{ errorMsg.currentPassword }}</span>
-          </el-form-item>
-          <el-form-item>
-            <label><b>New Password:</b></label>
-            <el-input v-model="newPassword" placeholder="Enter your new Password" type="password"
-                      show-password></el-input>
-            <span class="error">{{ errorMsg.newPassword }}</span>
-          </el-form-item>
-          <el-form-item>
-            <label><b>Profile Picture: </b>(Optional)</label>
-            <input type="file" accept="image/jpeg,image/gif,image/png" @change="setProfilePicture">
-            <br>
-            <span class="error">{{ errorMsg.profilePicture }}</span>
-          </el-form-item>
-          <el-form-item>
-            <span class="error" id="backendError" hidden>{{ errorMsg.backendChecks }}</span>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" v-on:click="editProfile">Save Changes</el-button>
-            <el-button v-on:click="cancel">Cancel</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-      <el-col :span="9">
-        <div class="grid-content"></div>
-      </el-col>
-    </el-row>
+  <div v-if="dataReady">
+    <permission-denied v-if="!hasPermission"></permission-denied>
+    <div v-else>
+      <el-row>
+        <el-col :span="9">
+          <div class="grid-content"></div>
+        </el-col>
+        <el-col :span="6">
+          <div class="grid-content"></div>
+          <el-form>
+            <el-form-item>
+              <h1>Edit Profile:</h1>
+            </el-form-item>
+            <el-form-item>
+              <p style="text-align:center;"><img v-if="defaultNeeded" src="../assets/defaultProfile.jpg"
+                                                 style="width: 200px; height: 200px" fit="contain" alt=""/></p>
+              <p style="text-align:center;"><img v-if="!defaultNeeded" :src="profilePictureDisplay"
+                                                 style="width: 200px; height: 200px" fit="contain" alt=""/></p>
+              <el-button type="danger" style="text-align: center" v-if="!defaultNeeded" v-on:click="dialogVisible = true">
+                Delete Image
+              </el-button>
+              <el-dialog
+                  title="Confirm Delete"
+                  v-model="dialogVisible"
+                  width="30%"
+                  :before-close="handleClose">
+                <span>Are you sure you want to delete your profile picture?</span>
+                <template #footer>
+                <span>
+                  <el-button @click="dialogVisible = false">Cancel</el-button>
+                  <el-button type="danger" @click="deleteImage">Confirm</el-button>
+                </span>
+                </template>
+              </el-dialog>
+            </el-form-item>
+            <el-form-item>
+              <label><b>First Name:</b></label>
+              <el-input v-model="firstName" placeholder="Enter your new First Name" type="text"></el-input>
+              <span class="error">{{ errorMsg.firstName }}</span>
+            </el-form-item>
+            <el-form-item>
+              <label><b>Last Name:</b></label>
+              <el-input v-model="lastName" placeholder="Enter your new Last Name" type="text"></el-input>
+              <span class="error">{{ errorMsg.lastName }}</span>
+            </el-form-item>
+            <el-form-item>
+              <label><b>Email:</b></label>
+              <el-input v-model="email" placeholder="Enter your new Email" type="email"></el-input>
+              <span class="error">{{ errorMsg.email }}</span>
+            </el-form-item>
+            <el-form-item>
+              <label><b>Current Password:</b></label>
+              <el-input v-model="currentPassword" placeholder="Enter your current Password" type="password"
+                        show-password></el-input>
+              <span class="error">{{ errorMsg.currentPassword }}</span>
+            </el-form-item>
+            <el-form-item>
+              <label><b>New Password:</b></label>
+              <el-input v-model="newPassword" placeholder="Enter your new Password" type="password"
+                        show-password></el-input>
+              <span class="error">{{ errorMsg.newPassword }}</span>
+            </el-form-item>
+            <el-form-item>
+              <label><b>Profile Picture: </b></label>
+              <br>
+              <input type="file" accept="image/jpeg,image/gif,image/png" @change="setProfilePicture">
+              <br>
+              <span class="error">{{ errorMsg.profilePicture }}</span>
+            </el-form-item>
+            <el-form-item>
+              <span class="error" id="backendError" hidden>{{ errorMsg.backendChecks }}</span>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" v-on:click="editProfile">Save Changes</el-button>
+              <el-button v-on:click="cancel">Cancel</el-button>
+            </el-form-item>
+          </el-form>
+        </el-col>
+        <el-col :span="9">
+          <div class="grid-content"></div>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -88,6 +104,7 @@ export default {
       profilePicture: 'data:',
       profilePictureDisplay: '',
       defaultNeeded: true,
+      dialogVisible: false,
       errorMsg: {
         'selectedFile': null,
         'firstName': null,
@@ -99,20 +116,33 @@ export default {
         'backendChecks': null
       },
       check: true,
+      dataReady: false
     }
   },
 
   mounted() {
     this.checkPermission()
-    if (this.hasPermission === true) {
-      this.getUserData()
-      this.getImageData()
-    }
+    this.getUserData()
+    this.getImageData()
+    setTimeout(this.pageReady, 200)
   },
 
   methods: {
+    pageReady() {
+      this.dataReady = true
+    },
+
     checkPermission() {
       this.hasPermission = !!(this.$store.getters.isLoggedIn && Number(this.$route.params.id) === this.$store.state.userId);
+    },
+
+    handleClose(done) {
+      this.$confirm('Cancel?')
+          .then(() => {
+            done();
+            this.dialogVisible = false
+          })
+          .catch(() => {});
     },
 
     getUserData() {
@@ -138,6 +168,9 @@ export default {
             this.profilePictureDisplay = this.profilePicture
             this.defaultNeeded = false
           })
+          .catch((error) => {
+            console.log(error.response.statusText)
+          });
     },
 
     setProfilePicture(event) {
@@ -167,11 +200,13 @@ export default {
                 .then(() => {
                   this.defaultNeeded = true
                   this.profilePicture = null
+                  this.dialogVisible = false
                 })
           })
           .catch((error) => {
             this.defaultNeeded = true
             this.profilePicture = null
+            this.dialogVisible = false
             console.log(error.response.statusText)
           });
     },

@@ -12,6 +12,7 @@ import EditProfile from "./components/EditProfile";
 import EventDetails from "./components/EventDetails";
 import Home from "./components/Home";
 import { store } from "./store"
+import ManageRequests from "./components/ManageRequests";
 
 const routes = [
     {
@@ -58,6 +59,11 @@ const routes = [
         path: "/users/:id/edit",
         name: "editProfile",
         component: EditProfile
+    },
+    {
+        path: "/events/:id/manage",
+        name: "manageRequests",
+        component: ManageRequests
     }
 ];
 

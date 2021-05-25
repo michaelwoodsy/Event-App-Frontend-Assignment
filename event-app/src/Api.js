@@ -5,33 +5,21 @@ const instance = axios.create({
 });
 
 export const Event = {
-    createNew: (title,
-                description,
-                categoryIds,
-                date,
-                isOnline,
-                url,
-                venue,
-                capacity,
-                requiresAttendanceControl,
-                fee) => instance.post('events', {
-        title,
-        description,
-        categoryIds,
-        date,
-        isOnline,
-        url,
-        venue,
-        capacity,
-        requiresAttendanceControl,
-        fee
-    }),
+    createNew: (eventData) => instance.post('events', eventData),
 
-    getEvents: () => instance.get('events', {}),
+    getEvents: (filter) => instance.get('events', {params: {'sortBy': filter}}),
 
-    searchEvents: (searchTerm) => instance.get('events', {params: {'q': searchTerm}}),
+    searchEvents: (searchTerm, filter) => instance.get('events', {params: {'q': searchTerm, 'sortBy': filter}}),
+
+    filterEvents: (categoryIds, filter) => instance.get('events', {params: {'categoryIds': categoryIds, 'sortBy': filter}}),
+
+    searchFilterEvents: (searchTerm, categoryIds, filter) => instance.get('events', {params: {'q': searchTerm, 'categoryIds': categoryIds, 'sortBy': filter}}),
 
     getEventData: (id) => instance.get(`events/${id}`, {}),
+
+    getCategories: () => instance.get(`events/categories`, {}),
+
+    editEvent: (id, eventData) => instance.patch(`events/${id}`, eventData),
 
     deleteEvent: (id) => instance.delete(`events/${id}`, {}),
 };
@@ -64,4 +52,21 @@ export const UserImage = {
     getUserImage: (id) => instance.get(`users/${id}/image`, {responseType: 'arraybuffer'}),
 
     deleteUserImage: (id) => instance.delete(`users/${id}/image`, {}),
+}
+
+export const EventImage = {
+    setEventImage: (id, file, type) => instance.put(`events/${id}/image`, file, {headers: {'Content-Type': `${type}`}}),
+
+    getEventImage: (id) => instance.get(`events/${id}/image`, {responseType: 'arraybuffer'}),
+}
+
+export const EventAttendee = {
+    getEventAttendees: (id) => instance.get(`events/${id}/attendees`,{}),
+
+    requestAttendance: (id) => instance.post(`events/${id}/attendees`,{}),
+
+    removeAttendance: (id) => instance.delete(`events/${id}/attendees`,{}),
+
+    changeAttendance: (eventId, userId, status) => instance.patch(`events/${eventId}/attendees/${userId}`, status),
+
 }

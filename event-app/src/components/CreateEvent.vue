@@ -1,127 +1,126 @@
 <template>
-  <permission-denied v-if="!hasPermission"></permission-denied>
-  <div v-else>
-    <el-row>
-      <el-col :span="9">
-        <div class="grid-content"></div>
-      </el-col>
-      <el-col :span="6">
-        <div class="grid-content"></div>
-        <el-form>
-          <el-form-item>
-            <h1>Create Event:</h1>
-          </el-form-item>
-          <el-form-item>
-            <label><b>Title:</b></label>
-            <el-input placeholder="Please input event name" v-model="title" type="text"></el-input>
-            <span class="error">{{ errorMsg.title }}</span>
-          </el-form-item>
-          <el-form-item>
-            <label style="margin-right: 10px"><b>Categories:</b></label>
-            <el-select v-model="selectedCategories" multiple placeholder="Select">
-              <el-option
-                  v-for="category in categories"
-                  :key="category.categoryId"
-                  :label="category.name"
-                  :value="category.categoryId">
-              </el-option>
-            </el-select>
-            <br>
-            <span class="error">{{ errorMsg.selectedCategories }}</span>
-          </el-form-item>
-          <el-form-item>
-            <label style="margin-right: 10px"><b>Date:</b></label>
-            <el-date-picker
-                v-model="date"
-                type="datetime"
-                placeholder="Select date and time">
-            </el-date-picker>
-            <br>
-            <span class="error">{{ errorMsg.date }}</span>
-          </el-form-item>
-          <el-form-item>
-            <label style="margin-right: 10px"><b>Image:</b></label>
-            <input type="file" @change="onFileSelected">
-            <br>
-            <span class="error">{{ errorMsg.selectedFile }}</span>
-          </el-form-item>
-          <el-form-item>
-            <label><b>Description:</b></label>
-            <el-input
-                type="textarea"
-                :autosize="{ minRows: 2, maxRows: 4}"
-                placeholder="Provide an Event Description"
-                v-model="description">
-            </el-input>
-            <span class="error">{{ errorMsg.description }}</span>
-          </el-form-item>
-          <el-form-item>
-            <label style="margin-right: 10px"><b>Maximum Capacity:</b></label>
-            <el-input id="capacityInput" v-model="maxCapacity" :min="1" type="number"></el-input>
-            <el-checkbox v-model="checkedCapacity" @change="maxCapacityChange">Non-Applicable</el-checkbox>
-            <br>
-            <span class="error">{{ errorMsg.maxCapacity }}</span>
-          </el-form-item>
-          <el-form-item>
-            <label style="margin-right: 10px"><b>Online or In-Person:</b></label>
-            <el-switch
-                v-model="isOnline"
-                active-text="Online"
-                inactive-text="In-Person"
-                @change="venueUrlChange"
-            >
-            </el-switch>
-            <br>
-            <span>Online requires a URL, In-Person requires a venue</span>
-            <span class="error">{{ errorMsg.isOnline }}</span>
-          </el-form-item>
-          <el-form-item>
-            <label><b>URL:</b></label>
-            <el-input id="urlInput" placeholder="Please input event URL" v-model="eventUrl" type="url">
-              <template #prepend>https://</template>
-            </el-input>
-            <span class="error">{{ errorMsg.eventUrl }}</span>
-          </el-form-item>
-          <el-form-item>
-            <label><b>Venue:</b></label>
-            <el-input id="venueInput" placeholder="Please input event venue" v-model="venue" readonly
-                      type="text"></el-input>
-            <span class="error">{{ errorMsg.venue }}</span>
-          </el-form-item>
-          <el-form-item>
-            <label style="margin-right: 10px"><b>Requires Attendance Control:</b></label>
-            <el-radio v-model="controlAttendanceStatus" label=true>Yes</el-radio>
-            <el-radio v-model="controlAttendanceStatus" label=false>No</el-radio>
-            <span class="error">{{ errorMsg.controlAttendanceStatus }}</span>
-          </el-form-item>
-          <el-form-item>
-            <label><b>Fee:</b></label>
-            <el-input id="feeInput" placeholder="Please input event fee" v-model="fee" :min="0" type="number">
-              <template #prepend>$</template>
-            </el-input>
-            <el-checkbox v-model="checkedFee" @change="feeChange">Non-Applicable</el-checkbox>
-            <br>
-            <span class="error">{{ errorMsg.fee }}</span>
-          </el-form-item>
-          <el-form-item>
-            <span class="error" id="backendError" hidden>{{ errorMsg.backendChecks }}</span>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" v-on:click="createEvent">Create Event</el-button>
-            <el-button v-on:click="cancel">Cancel</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-      <el-col :span="9">
-        <div class="grid-content"></div>
-      </el-col>
-    </el-row>
+  <div v-if="dataReady">
+    <permission-denied v-if="!hasPermission"></permission-denied>
+    <div v-else>
+      <el-row>
+        <el-col :span="9">
+          <div class="grid-content"></div>
+        </el-col>
+        <el-col :span="6">
+          <div class="grid-content"></div>
+          <el-form>
+            <el-form-item>
+              <h1>Create Event:</h1>
+            </el-form-item>
+            <el-form-item>
+              <p style="text-align:center;"><img v-if="defaultNeeded" src="../assets/defaultEvent.png"
+                                                 style="width: 200px; height: 200px" fit="contain"/></p>
+              <p style="text-align:center;"><img v-if="!defaultNeeded" :src="eventImageDisplay"
+                                                 style="width: 200px; height: 200px" fit="contain"/></p>
+            </el-form-item>
+            <el-form-item>
+              <label><b>Title:</b></label>
+              <el-input placeholder="Please input event name" v-model="title" type="text"></el-input>
+              <span class="error">{{ errorMsg.title }}</span>
+            </el-form-item>
+            <el-form-item>
+              <label style="margin-right: 10px"><b>Categories:</b></label>
+              <el-select v-model="selectedCategories" multiple placeholder="Select">
+                <el-option
+                    v-for="category in categories"
+                    :key="category.name"
+                    :label="category.name"
+                    :value="category.id">
+                </el-option>
+              </el-select>
+              <br>
+              <span class="error">{{ errorMsg.selectedCategories }}</span>
+            </el-form-item>
+            <el-form-item>
+              <label style="margin-right: 10px"><b>Date:</b></label>
+              <el-date-picker
+                  v-model="date"
+                  type="datetime"
+                  placeholder="Select date and time">
+              </el-date-picker>
+              <br>
+              <span class="error">{{ errorMsg.date }}</span>
+            </el-form-item>
+            <el-form-item>
+              <label style="margin-right: 10px"><b>Event Image:</b></label>
+              <br>
+              <input type="file" accept="image/jpeg,image/gif,image/png" @change="setEventImage">
+              <br>
+              <span class="error">{{ errorMsg.eventImage }}</span>
+            </el-form-item>
+            <el-form-item>
+              <label><b>Description:</b></label>
+              <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 2, maxRows: 4}"
+                  placeholder="Provide an Event Description"
+                  v-model="description">
+              </el-input>
+              <span class="error">{{ errorMsg.description }}</span>
+            </el-form-item>
+            <el-form-item>
+              <label style="margin-right: 10px"><b>Maximum Capacity:</b> (Leave empty if no capacity)</label>
+              <el-input id="capacityInput" v-model="maxCapacity" :min="1" type="number"></el-input>
+              <span class="error">{{ errorMsg.maxCapacity }}</span>
+            </el-form-item>
+            <el-form-item>
+              <label style="margin-right: 10px"><b>Online or In-Person:</b></label>
+              <el-radio v-model="isOnline" :label=true @change="toggleOnline">Online</el-radio>
+              <el-radio v-model="isOnline" :label=false @change="toggleOnline">In-Person</el-radio>
+              <br>
+              <span class="error">{{ errorMsg.isOnline }}</span>
+            </el-form-item>
+            <el-form-item>
+              <label><b>URL:</b></label>
+              <el-input id="urlInput" placeholder="Please input event URL" v-model="eventUrl" type="url">
+                <template #prepend>https://</template>
+              </el-input>
+              <span class="error">{{ errorMsg.eventUrl }}</span>
+            </el-form-item>
+            <el-form-item v-if="isOnline === false || isOnline === ''">
+              <label><b>Venue:</b></label>
+              <el-input id="venueInput" placeholder="Please input event venue" v-model="venue" type="text"></el-input>
+              <span class="error">{{ errorMsg.venue }}</span>
+            </el-form-item>
+            <el-form-item>
+              <label style="margin-right: 10px"><b>Requires Attendance Control:</b></label>
+              <el-radio v-model="controlAttendanceStatus" :label=true>Yes</el-radio>
+              <el-radio v-model="controlAttendanceStatus" :label=false>No</el-radio>
+              <span class="error">{{ errorMsg.controlAttendanceStatus }}</span>
+            </el-form-item>
+            <el-form-item>
+              <label><b>Fee:</b> (Leave empty if no fee)</label>
+              <el-input id="feeInput" placeholder="Please input event fee" v-model="fee" :min="0" type="number">
+                <template #prepend>$</template>
+              </el-input>
+              <span class="error">{{ errorMsg.fee }}</span>
+            </el-form-item>
+            <el-form-item>
+              <span class="error" id="backendError" hidden>{{ errorMsg.backendChecks }}</span>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" v-on:click="createEvent">Create Event</el-button>
+              <el-button v-on:click="cancel">Cancel</el-button>
+            </el-form-item>
+          </el-form>
+        </el-col>
+        <el-col :span="9">
+          <div class="grid-content"></div>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
 <script>
 
 import PermissionDenied from "./PermissionDenied";
+import {Event, EventImage} from "../Api";
 
 export default {
   name: "CreateEvent",
@@ -129,37 +128,24 @@ export default {
 
   data() {
     return {
-      selectedFile: null,
       checkedFee: false,
       checkedCapacity: false,
       title: '',
       selectedCategories: [],
-      categories: [{
-        categoryId: 1,
-        name: 'Film'
-      }, {
-        categoryId: 2,
-        name: 'Festival'
-      }, {
-        categoryId: 3,
-        name: 'Book Club'
-      }, {
-        categoryId: 4,
-        name: 'Parade'
-      }, {
-        categoryId: 5,
-        name: 'Debate'
-      }],
+      categories: [],
       date: '',
       description: '',
       maxCapacity: '',
-      isOnline: true,
+      isOnline: '',
       eventUrl: '',
-      venue: null,
+      venue: '',
       controlAttendanceStatus: '',
       fee: '',
+      eventImage: null,
+      eventImageDisplay: '',
+      defaultNeeded: true,
       errorMsg: {
-        'selectedFile': null,
+        'eventImage': null,
         'title': null,
         'selectedCategories': null,
         'date': null,
@@ -169,11 +155,16 @@ export default {
         'eventUrl': null,
         'venue': null,
         'controlAttendanceStatus': null,
-        'fee': null,
         'backendChecks': null
       },
       check: true,
+      dataReady: false
     }
+  },
+
+  mounted() {
+    this.getCategories()
+    setTimeout(this.pageReady, 200)
   },
 
   computed: {
@@ -183,46 +174,48 @@ export default {
   },
 
   methods: {
-    onFileSelected(event) {
-      this.selectedFile = event.target.files[0];
+    pageReady() {
+      this.dataReady = true
+    },
+
+    toggleOnline() {
+      if (this.isOnline === true) {
+        this.venue = ''
+      }
+    },
+
+    getCategories() {
+      Event.getCategories()
+          .then((response) => {
+            this.error = null
+            this.categories = response.data
+          })
+          .catch((error) => {
+            console.log(error.response.statusText)
+          })
+    },
+
+    setEventImage(event) {
+      try {
+        const image = event.target.files[0]
+        if (image.size <= 20e6) {
+          this.eventImage = image
+          this.defaultNeeded = false
+          this.eventImageDisplay = URL.createObjectURL(this.eventImage)
+          this.errorMsg['eventImage'] = ""
+        } else {
+          this.eventImage = null
+          this.defaultNeeded = true
+          this.errorMsg['eventImage'] = "Image is too large, please select another"
+        }
+      } catch (e) {
+        this.defaultNeeded = true
+        this.eventImage = null
+      }
     },
 
     cancel() {
       this.$router.push({name: "events"})
-    },
-
-    feeChange() {
-      if (this.checkedFee === true) {
-        this.fee = null;
-        document.getElementById("feeInput").readOnly = true;
-      } else {
-        document.getElementById("feeInput").readOnly = false;
-        this.fee = '';
-      }
-    },
-
-    maxCapacityChange() {
-      if (this.checkedCapacity === true) {
-        this.maxCapacity = null;
-        document.getElementById("capacityInput").readOnly = true;
-      } else {
-        document.getElementById("capacityInput").readOnly = false;
-        this.maxCapacity = '';
-      }
-    },
-
-    venueUrlChange() {
-      if (this.isOnline === true) {
-        document.getElementById("venueInput").readOnly = true;
-        document.getElementById("urlInput").readOnly = false;
-        this.venue = null;
-        this.eventUrl = '';
-      } else {
-        document.getElementById("venueInput").readOnly = false;
-        document.getElementById("urlInput").readOnly = true;
-        this.eventUrl = null;
-        this.venue = '';
-      }
     },
 
     checkTitle() {
@@ -257,11 +250,11 @@ export default {
     },
 
     checkImage() {
-      if (this.selectedFile === null) {
-        this.errorMsg['selectedFile'] = 'Please provide an event image'
+      if (this.eventImage === null) {
+        this.errorMsg['eventImage'] = 'Please provide an event image'
         this.check = false
       } else {
-        this.errorMsg['selectedFile'] = null
+        this.errorMsg['eventImage'] = null
       }
     },
 
@@ -275,8 +268,8 @@ export default {
     },
 
     checkMaxCapacity() {
-      if (this.maxCapacity === '') {
-        this.errorMsg['maxCapacity'] = 'Please enter a maximum capacity'
+      if (this.maxCapacity !== '' & this.maxCapacity.includes('.')) {
+        this.errorMsg['maxCapacity'] = 'Please enter a whole number'
         this.check = false
       } else {
         this.errorMsg['maxCapacity'] = null
@@ -293,7 +286,7 @@ export default {
     },
 
     checkUrl() {
-      if (this.eventUrl === '') {
+      if (this.eventUrl === '' && this.isOnline === true) {
         this.errorMsg['eventUrl'] = 'Please enter an event URL'
         this.check = false
       } else {
@@ -302,7 +295,7 @@ export default {
     },
 
     checkVenue() {
-      if (this.venue === '') {
+      if (this.venue === '' && this.isOnline === false) {
         this.errorMsg['venue'] = 'Please provide a venue'
         this.check = false
       } else {
@@ -319,15 +312,6 @@ export default {
       }
     },
 
-    checkFee() {
-      if (this.fee === '') {
-        this.errorMsg['fee'] = 'Please provide an event fee'
-        this.check = false
-      } else {
-        this.errorMsg['fee'] = null
-      }
-    },
-
     createEvent() {
       document.getElementById("backendError").hidden = true;
       this.checkTitle()
@@ -340,12 +324,42 @@ export default {
       this.checkUrl()
       this.checkVenue()
       this.checkAttendanceControl()
-      this.checkFee()
 
       if (!this.check) {
         this.check = true
       } else {
-        console.log("Passes all tests!")
+        let eventData = {}
+        eventData.title = this.title
+        eventData.description = this.description
+        eventData.categoryIds = this.selectedCategories
+        eventData.date = this.date.setHours(this.date.value.getHours() + 24)
+        eventData.date = this.date.toISOString().slice(0, -1).replace('T', ' ')
+        eventData.isOnline = this.isOnline
+        eventData.requiresAttendanceControl = this.requiresAttendanceControl
+        if (this.maxCapacity !== '') {
+          eventData.capacity = Number(this.maxCapacity)
+        }
+        if (this.fee !== '') {
+          eventData.fee = Number(this.fee)
+        }
+        if (this.eventUrl !== '') {
+          eventData.url = this.eventUrl
+        }
+        if (this.venue !== '') {
+          eventData.venue = this.venue
+        }
+        Event.createNew(eventData)
+            .then((response) => {
+                  EventImage.setEventImage(response.data.eventId, this.eventImage, this.eventImage.type)
+                      .then(() => {
+                        this.$router.push({name: 'events'})
+                      })
+            })
+            .catch((error) => {
+              let errorString = error.response.statusText.slice(error.response.statusText.indexOf(":") + 2)
+              this.errorMsg.backendChecks = errorString.charAt(0).toUpperCase() + errorString.slice(1)
+              document.getElementById("backendError").hidden = false;
+            })
       }
     }
   }
