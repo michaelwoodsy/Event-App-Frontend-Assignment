@@ -45,7 +45,12 @@
         <div class="grid-content"></div>
         <el-button type="primary" icon="el-icon-search" @click="searchFilterEvents">Search</el-button>
       </el-col>
-      <el-col :span="5">
+      <el-col :span="3">
+        <div class="grid-content">
+          <el-checkbox style="margin-top: 10px" v-model="inPast">Show Past Events</el-checkbox>
+        </div>
+      </el-col>
+      <el-col :span="2">
         <div class="grid-content"></div>
       </el-col>
     </el-row>
@@ -154,6 +159,7 @@ export default {
       pageSize: 10,
       sort: "DATE_ASC",
       error: null,
+      inPast: false,
       dataReady: false
     }
   },
@@ -265,6 +271,14 @@ export default {
         }
         this.events[i].date = this.events[i].date.slice(0, -8).replace("T", ", ")
         this.events[i].hostName = this.events[i].organizerFirstName + ' ' + this.events[i].organizerLastName
+        if (this.inPast === false){
+          let now = new Date()
+          let eventDate = new Date(this.events[i].date)
+          if (now > eventDate) {
+            this.events.splice(i, 1)
+            i--
+          }
+        }
       }
     },
 

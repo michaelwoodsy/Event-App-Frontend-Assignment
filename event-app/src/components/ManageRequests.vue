@@ -66,7 +66,7 @@
               <el-button align="left" @click="editDialogVisible = false">Cancel</el-button>
               <el-button type="danger" @click="setRejected">Rejected</el-button>
               <el-button type="warning" @click="setPending">Pending</el-button>
-              <el-button type="success" @click="setAccepted">Accepted</el-button>
+              <el-button v-if="attendeeCount < capacity" type="success" @click="setAccepted">Accepted</el-button>
             </span>
             </template>
           </el-dialog>

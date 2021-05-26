@@ -520,7 +520,6 @@ export default {
             this.fee = response.data.fee
             this.attendees = response.data.attendeeCount
             this.organizerId = response.data.organizerId
-            console.log(this.controlAttendanceStatus)
             this.checkPermission()
             if (this.fee === null || Number(this.fee) === 0) {
               this.fee = 'Free'

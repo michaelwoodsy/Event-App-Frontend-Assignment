@@ -332,7 +332,7 @@ export default {
         eventData.title = this.title
         eventData.description = this.description
         eventData.categoryIds = this.selectedCategories
-        eventData.date = this.date.setHours(this.date.value.getHours() + 24)
+        eventData.date = this.date.setHours(this.date.getHours() + 24)
         eventData.date = this.date.toISOString().slice(0, -1).replace('T', ' ')
         eventData.isOnline = this.isOnline
         eventData.requiresAttendanceControl = this.requiresAttendanceControl

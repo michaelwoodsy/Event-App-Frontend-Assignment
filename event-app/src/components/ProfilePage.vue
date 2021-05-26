@@ -28,62 +28,119 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" v-on:click="editProfile">Edit Profile</el-button>
-              <el-button type="primary" v-if="myEvents.length > 0" v-on:click="dialogVisible = true">View your Events</el-button>
+              <el-button type="primary" v-if="attendingEvents.length > 0 || hostingEvents.length > 0" v-on:click="dialogVisible = true">View your Events</el-button>
               <el-dialog
                   title="My Events:"
                   v-model="dialogVisible"
                   width="90%"
                   :before-close="handleClose">
-                <el-table
-                    :data="myEvents"
-                    :default-sort="{prop: 'date', order: 'ascending'}"
-                    @row-click="viewEvent"
-                    height="350"
-                    stripe>
-                  <el-table-column
-                      prop="eventImage"
-                      label="Image"
-                      width="100">
-                    <template v-slot="scope">
-                      <img v-if="!scope.row.defaultEventNeeded" :src="scope.row.eventImage" width="50" height="50"/>
-                      <img v-if="scope.row.defaultEventNeeded" src="../assets/defaultEvent.png" width="50" height="50"/>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                      prop="date"
-                      label="Date and Time">
-                  </el-table-column>
-                  <el-table-column
-                      prop="title"
-                      label="Title"
-                      width="250">
-                  </el-table-column>
-                  <el-table-column
-                      prop="categoryNames"
-                      label="Categories"
-                      width="500">
-                  </el-table-column>
-                  <el-table-column
-                      prop="hostImage"
-                      label="Host"
-                      width="60">
-                    <template v-slot="scope">
-                      <img v-if="!scope.row.defaultHostNeeded" :src="scope.row.hostImage" width="50" height="50"/>
-                      <img v-if="scope.row.defaultHostNeeded" src="../assets/defaultProfile.jpg" width="50" height="50"/>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                      prop="hostName"
-                      label=""
-                      width="150">
-                  </el-table-column>
-                  <el-table-column
-                      prop="numAcceptedAttendees"
-                      label="Attendance"
-                      width="100"
-                      align="center">
-                  </el-table-column>
-                </el-table>
+                <div v-if="attendingEvents.length > 0">
+                  <h2 style="text-align: center">Events Attending:</h2>
+                  <el-table
+                      :data="attendingEvents"
+                      :default-sort="{prop: 'date', order: 'ascending'}"
+                      @row-click="viewEvent"
+                      height="350"
+                      stripe>
+                    <el-table-column
+                        prop="eventImage"
+                        label="Image"
+                        width="100">
+                      <template v-slot="scope">
+                        <img v-if="!scope.row.defaultEventNeeded" :src="scope.row.eventImage" width="50" height="50"/>
+                        <img v-if="scope.row.defaultEventNeeded" src="../assets/defaultEvent.png" width="50" height="50"/>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="date"
+                        label="Date and Time">
+                    </el-table-column>
+                    <el-table-column
+                        prop="title"
+                        label="Title"
+                        width="250">
+                    </el-table-column>
+                    <el-table-column
+                        prop="categoryNames"
+                        label="Categories"
+                        width="500">
+                    </el-table-column>
+                    <el-table-column
+                        prop="hostImage"
+                        label="Host"
+                        width="60">
+                      <template v-slot="scope">
+                        <img v-if="!scope.row.defaultHostNeeded" :src="scope.row.hostImage" width="50" height="50"/>
+                        <img v-if="scope.row.defaultHostNeeded" src="../assets/defaultProfile.jpg" width="50" height="50"/>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="hostName"
+                        label=""
+                        width="150">
+                    </el-table-column>
+                    <el-table-column
+                        prop="numAcceptedAttendees"
+                        label="Attendance"
+                        width="100"
+                        align="center">
+                    </el-table-column>
+                  </el-table>
+                </div>
+                <div v-if="hostingEvents.length > 0">
+                  <br>
+                  <h2 style="text-align: center">Events Hosting:</h2>
+                  <el-table
+                      :data="hostingEvents"
+                      :default-sort="{prop: 'date', order: 'ascending'}"
+                      @row-click="viewEvent"
+                      height="350"
+                      stripe>
+                    <el-table-column
+                        prop="eventImage"
+                        label="Image"
+                        width="100">
+                      <template v-slot="scope">
+                        <img v-if="!scope.row.defaultEventNeeded" :src="scope.row.eventImage" width="50" height="50"/>
+                        <img v-if="scope.row.defaultEventNeeded" src="../assets/defaultEvent.png" width="50" height="50"/>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="date"
+                        label="Date and Time">
+                    </el-table-column>
+                    <el-table-column
+                        prop="title"
+                        label="Title"
+                        width="250">
+                    </el-table-column>
+                    <el-table-column
+                        prop="categoryNames"
+                        label="Categories"
+                        width="500">
+                    </el-table-column>
+                    <el-table-column
+                        prop="hostImage"
+                        label="Host"
+                        width="60">
+                      <template v-slot="scope">
+                        <img v-if="!scope.row.defaultHostNeeded" :src="scope.row.hostImage" width="50" height="50"/>
+                        <img v-if="scope.row.defaultHostNeeded" src="../assets/defaultProfile.jpg" width="50" height="50"/>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="hostName"
+                        label=""
+                        width="150">
+                    </el-table-column>
+                    <el-table-column
+                        prop="numAcceptedAttendees"
+                        label="Attendance"
+                        width="100"
+                        align="center">
+                    </el-table-column>
+                  </el-table>
+                </div>
                 <template #footer>
                 <span class="dialog-footer">
                   <el-button type="primary" @click="dialogVisible = false">Close</el-button>
@@ -115,7 +172,8 @@ export default {
       lastName: '',
       email: '',
       events: [],
-      myEvents: [],
+      attendingEvents: [],
+      hostingEvents: [],
       categories: [],
       sort: 'DATE_ASC',
       error: null,
@@ -272,12 +330,12 @@ export default {
               this.events[i].myEvent = ''
               if (this.events[i].organizerId === this.userId) {
                 this.events[i].myEvent = true
-                this.myEvents.push(this.events[i])
+                this.hostingEvents.push(this.events[i])
               }
               for (const attendee in this.events[i].attendeeList) {
                 if (this.events[i].attendeeList[attendee].attendeeId === this.userId && this.events[i].attendeeList[attendee].status === 'accepted') {
                   this.events[i].myEvent = true
-                  this.myEvents.push(this.events[i])
+                  this.attendingEvents.push(this.events[i])
                 }
               }
             })

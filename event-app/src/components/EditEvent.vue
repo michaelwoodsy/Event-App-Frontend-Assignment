@@ -247,6 +247,10 @@ export default {
               this.inPast = true
             }
             this.date = eventDate
+            this.date = this.date.setHours(this.date.getHours() - 12)
+            this.date = new Date(this.date)
+            //this.date = this.date.toISOString()
+            this.attendees = response.data.attendeeCount
             this.description = response.data.description
             this.maxCapacity = response.data.capacity
             if (this.maxCapacity === null) {
@@ -359,6 +363,9 @@ export default {
       if (this.maxCapacity !== '' & this.maxCapacity.includes('.')) {
         this.errorMsg['maxCapacity'] = 'Please enter a whole number'
         this.check = false
+      } else if (this.maxCapacity < this.attendees) {
+        this.errorMsg['maxCapacity'] = 'Capacity too small, please remove attendees/increase capacity'
+        this.check = false
       } else {
         this.errorMsg['maxCapacity'] = null
       }
@@ -420,6 +427,7 @@ export default {
         eventData.title = this.title
         eventData.description = this.description
         eventData.categoryIds = this.selectedCategories
+        console.log(this.date)
         eventData.date = this.date.setHours(this.date.getHours() + 24)
         eventData.date = this.date.toISOString().slice(0, -1).replace('T', ' ')
         eventData.isOnline = this.isOnline
