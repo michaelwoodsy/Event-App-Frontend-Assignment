@@ -5,7 +5,8 @@
       <el-row>
         <el-col :span="4">
           <div class="grid-content">
-            <el-button v-if="requestAttendance && !inPast && isLoggedIn" @click="requestDialogVisible = true" style="float: right" type="success">
+            <el-button v-if="requestAttendance && !inPast && isLoggedIn" @click="requestDialogVisible = true"
+                       style="float: right" type="success">
               Request Attendance
             </el-button>
             <el-dialog
@@ -21,7 +22,8 @@
                 </span>
               </template>
             </el-dialog>
-            <el-button v-if="requestAttendance && !inPast && !isLoggedIn" @click="loginDialogVisible = true" style="float: right" type="success">
+            <el-button v-if="requestAttendance && !inPast && !isLoggedIn" @click="loginDialogVisible = true"
+                       style="float: right" type="success">
               Request Attendance
             </el-button>
             <el-dialog
@@ -36,7 +38,8 @@
                 </span>
               </template>
             </el-dialog>
-            <el-button v-if="attending && !inPast && isLoggedIn" @click="removeDialogVisible = true" style="float: right" type="danger">Remove Attendance
+            <el-button v-if="attending && !inPast && isLoggedIn" @click="removeDialogVisible = true"
+                       style="float: right" type="danger">Remove Attendance
             </el-button>
             <el-dialog
                 title="Confirm Removal"
@@ -145,8 +148,12 @@
                   v-model="attendeeDialogVisible"
                   width="50%"
                   :before-close="handleClose">
+                <span style="margin: auto">Number of attendees:
+                  <span v-if="maxCapacity === 'No Capacity Limit'">{{ attendees }} (No Capacity Limit)</span>
+                  <span v-else>{{ attendees }}/{{ maxCapacity }}</span>
+                </span>
                 <el-table
-                    height="350"
+                    height="300"
                     :data="attendeeList"
                     :default-sort="{prop: 'dateOfInterest', order: 'descending'}"
                     stripe
@@ -155,7 +162,8 @@
                       prop="image"
                       width="100">
                     <template v-slot="scope">
-                      <img v-if="scope.row.image === 'default'" src="../assets/defaultProfile.jpg" width="50" height="50"/>
+                      <img v-if="scope.row.image === 'default'" src="../assets/defaultProfile.jpg" width="50"
+                           height="50"/>
                       <img v-else :src="scope.row.image" width="50" height="50"/>
                     </template>
                   </el-table-column>
@@ -196,7 +204,8 @@
         </el-col>
         <el-col :span="4">
           <div class="grid-content"></div>
-          <el-button style="text-align: right" v-if="!inPast && hasPermission" @click="manageRequests" type="primary">Manage Attendees
+          <el-button style="text-align: right" v-if="!inPast && hasPermission" @click="manageRequests" type="primary">
+            Manage Attendees
           </el-button>
         </el-col>
       </el-row>
@@ -511,6 +520,7 @@ export default {
             this.fee = response.data.fee
             this.attendees = response.data.attendeeCount
             this.organizerId = response.data.organizerId
+            console.log(this.controlAttendanceStatus)
             this.checkPermission()
             if (this.fee === null || Number(this.fee) === 0) {
               this.fee = 'Free'
@@ -520,7 +530,7 @@ export default {
             } else {
               this.eventUrl = 'https://' + this.eventUrl
             }
-            if (this.venue === null) {
+            if (this.venue === null || this.isOnline === 1) {
               this.venue = 'No Venue (Online)'
             }
             if (this.maxCapacity === null) {
@@ -588,7 +598,7 @@ export default {
           })
     },
 
-    removeAttendance(){
+    removeAttendance() {
       EventAttendee.removeAttendance(this.$route.params.id)
           .then(() => {
             this.$router.go(0)

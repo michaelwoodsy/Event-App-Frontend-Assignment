@@ -402,7 +402,6 @@ export default {
 
     editEvent() {
       document.getElementById("backendError").hidden = true;
-      console.log(this.maxCapacity)
       this.checkTitle()
       this.checkCategories()
       this.checkDate()
@@ -424,7 +423,7 @@ export default {
         eventData.date = this.date.setHours(this.date.getHours() + 24)
         eventData.date = this.date.toISOString().slice(0, -1).replace('T', ' ')
         eventData.isOnline = this.isOnline
-        eventData.requiresAttendanceControl = (this.controlAttendanceStatus === "true")
+        eventData.requiresAttendanceControl = this.controlAttendanceStatus
         if (this.maxCapacity !== '') {
           eventData.capacity = Number(this.maxCapacity)
         }

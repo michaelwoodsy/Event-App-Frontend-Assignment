@@ -17,7 +17,8 @@
       </el-row>
       <el-row>
         <el-col :span="10">
-          <div class="grid-content"></div>
+          <div class="grid-content">
+          </div>
         </el-col>
         <el-col :span="4">
           <div class="grid-content"></div>
@@ -31,7 +32,12 @@
     <div v-else>
       <el-row>
         <el-col :span="9">
-          <div class="grid-content"></div>
+          <div class="grid-content">
+            <span>Number of attendees:
+              <span v-if="capacity === null">{{ attendeeCount }} (No Capacity Limit)</span>
+              <span v-else>{{ attendeeCount }}/{{ capacity }}</span>
+            </span>
+          </div>
         </el-col>
         <el-col :span="6">
           <div class="grid-content"></div>
@@ -54,6 +60,7 @@
               width="30%"
               :before-close="handleClose">
             <span>Select the new attendance status of {{ userName }}</span>
+            <span class="error" id="backendError" hidden>{{ errorMsg.backendChecks }}</span>
             <template #footer>
             <span class="dialog-footer">
               <el-button align="left" @click="editDialogVisible = false">Cancel</el-button>
@@ -64,7 +71,7 @@
             </template>
           </el-dialog>
           <el-table
-              height="350"
+              height="500"
               :data="attendeeData"
               :default-sort="{prop: 'dateOfInterest', order: 'descending'}"
               stripe
@@ -123,10 +130,15 @@ export default {
       hasPermission: false,
       inPast: false,
       organizerId: '',
+      capacity: '',
+      attendeeCount: '',
       attendeeData: [],
       userId: '',
       userName: '',
-      editDialogVisible: false
+      editDialogVisible: false,
+      errorMsg: {
+        'backendChecks': null
+      },
     }
   },
 
@@ -154,6 +166,7 @@ export default {
       this.userId = row.attendeeId
       this.userName = row.name
       this.editDialogVisible = true
+      document.getElementById("backendError").hidden = true;
     },
 
     back() {
@@ -187,6 +200,8 @@ export default {
             if (eventDate < now) {
               this.inPast = true
             }
+            this.capacity = response.data.capacity
+            this.attendeeCount = response.data.attendeeCount
             this.organizerId = response.data.organizerId
             this.checkPermission()
           })
@@ -227,17 +242,20 @@ export default {
           .then(() => {
             this.$router.go(0)
           }, (error) => {
-            console.log(error.response.statusText)
+            let errorString = error.response.statusText.slice(error.response.statusText.indexOf(":") + 2)
+            this.errorMsg.backendChecks = errorString.charAt(0).toUpperCase() + errorString.slice(1)
+            document.getElementById("backendError").hidden = false;
           })
     },
 
     setAccepted() {
-      console.log()
       EventAttendee.changeAttendance(this.$route.params.id, this.userId, {status: "accepted"})
           .then(() => {
             this.$router.go(0)
           }, (error) => {
-            console.log(error.response.statusText)
+            let errorString = error.response.statusText.slice(error.response.statusText.indexOf(":") + 2)
+            this.errorMsg.backendChecks = errorString.charAt(0).toUpperCase() + errorString.slice(1)
+            document.getElementById("backendError").hidden = false;
           })
     },
 
@@ -246,7 +264,9 @@ export default {
           .then(() => {
             this.$router.go(0)
           }, (error) => {
-            console.log(error.response.statusText)
+            let errorString = error.response.statusText.slice(error.response.statusText.indexOf(":") + 2)
+            this.errorMsg.backendChecks = errorString.charAt(0).toUpperCase() + errorString.slice(1)
+            document.getElementById("backendError").hidden = false;
           })
     }
   }
@@ -254,5 +274,8 @@ export default {
 </script>
 
 <style scoped>
+.error {
+  color: red;
+}
 
 </style>
